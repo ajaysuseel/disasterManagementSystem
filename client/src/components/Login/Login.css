@@ -1,0 +1,135 @@
+/* Ensure body takes full viewport and disables scrolling */
+html, body { 
+    height: 100%; 
+    padding: 0;
+    margin: 0;
+    overflow: hidden; /* Disable scrolling */
+}
+
+.login-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center; /* Center content horizontally */
+    min-height: 100vh; 
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+
+}
+
+.login-header {
+    width: 100%;
+    padding: 20px;
+    background-color: #bdbdbd; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.login-header h1 {
+    margin: 0;
+    font-size: 2em;
+    color: #333;
+}
+
+.login-header p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.login-box {
+    width: 300px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    margin-bottom: 40px;
+    margin-left: auto;
+    margin-right: auto; /* Center the box on larger screens */
+    box-sizing: border-box; /* Ensures padding doesn't cause overflow */
+}
+
+.login-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="email"],
+input[type="password"] {
+    
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box; /* Ensure padding is within width */
+    width: 100%; /* Set to full width to avoid overflow */
+}
+
+.login-button {
+    width: 100%;
+    padding: 10px;
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background-color: darkblue;
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+}
+
+.login-footer {
+    margin-top: auto;
+    text-align: center;
+    background-color: #777;
+    width: 100%;
+    padding: 10px;
+    font-size: 0.9em;
+    color: #f0f0f0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); 
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    .login-box {
+        width: 80%; /* Make the login box wider for smaller screens */
+        margin-bottom: 30px;
+    }
+
+    .login-header h1 {
+        font-size: 1.8em; /* Slightly reduce header size on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .login-header h1 {
+        font-size: 1.5em; /* Reduce header font size further for mobile phones */
+    }
+
+    .login-box {
+        width: 90%; /* Adjust width for mobile screens */
+        padding: 15px; /* Reduce padding */
+    }
+
+    .login-button {
+        padding: 8px; /* Reduce button padding for smaller screens */
+    }
+}
