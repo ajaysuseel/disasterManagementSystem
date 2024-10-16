@@ -1,0 +1,186 @@
+/* src/styles/homepage.css */
+
+/* General Styles */
+
+
+.homepage {
+  display: flex;
+  height: 100vh; /* Full height */
+}
+
+/* Sidebar Container */
+.sidebar-container {
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  width: 250px; /* Fixed width for sidebar */
+  padding: 10px; /* Padding */
+  background-color: #FFAD60; /* Background for sidebar */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Shadow */
+  border-radius: 5px; /* Rounded corners */
+  position: relative; /* Position relative for overlay positioning */
+}
+
+/* Profile Header */
+.profile-header {
+  display: flex;
+  justify-content: space-between; /* Space between elements */
+  align-items: center; /* Center items vertically */
+}
+
+.profile-header h2 {
+  margin: 0; /* Remove margin */
+  font-size: 1.2rem; /* Adjust font size as needed */
+}
+
+.toggle-button {
+  background-color: transparent; /* Transparent background */
+  border: none; /* Remove border */
+  cursor: pointer; /* Pointer cursor */
+  font-size: 20px; /* Reduced font size */
+  padding: 5px; /* Reduced padding */
+  transition: transform 0.2s ease; /* Optional: add hover effect */
+}
+
+.toggle-button:hover {
+  transform: scale(1.2); /* Optional: enlarge on hover */
+}
+
+/* Alerts Sidebar (from Alerts.js) */
+.sidebar-alert {
+  margin-top: 10px; /* Space above alerts */
+  background-color: bisque; /* Background for alerts */
+  padding: 10px; /* Padding */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow */
+}
+
+.sidebar-alert h1 {
+  margin: 0 0 10px; /* Margin below title */
+  font-size: 1rem; /* Adjust font size */
+}
+
+.alert-item {
+  border-bottom: 1px solid #ccc; /* Separator for alerts */
+  padding: 10px 0; /* Vertical padding */
+}
+
+.alert-item:last-child {
+  border-bottom: none; /* Remove bottom border for last alert */
+}
+
+.alert-item strong {
+  color: #d9534f; /* Emphasis color for alert titles */
+}
+
+.alert-item p {
+  margin: 5px 0 0; /* Margin for alert descriptions */
+  font-size: 0.9rem; /* Adjust font size */
+}
+
+/* Hamburger Menu Overlay */
+.hamburger-overlay {
+  position: absolute; /* Position relative to sidebar */
+  top: 0;
+  left: 0;
+  height: 100%; /* Full height */
+  width: 100%; /* Full width */
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex; /* Flex for centering */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  z-index: 100; /* Above sidebar */
+}
+
+/* Hamburger Menu */
+.hamburger-menu {
+  background-color: #FFAD60; /* White background */
+  padding: 20px; /* Padding */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Shadow */
+  width: 80%; /* Responsive width */
+  max-width: 400px; /* Max width for larger screens */
+  position: relative; /* Position relative for close button */
+}
+
+/* Close Button inside Hamburger Menu */
+.close-button {
+  background: transparent; /* Transparent background */
+  border: none; /* No border */
+  cursor: pointer; /* Pointer cursor */
+  font-size: 20px; /* Font size */
+  position: absolute; /* Position absolute within the menu */
+  top: 10px; /* Distance from top */
+  right: 10px; /* Distance from right */
+  width: 30px; /* Width of the button */
+  height: 30px; /* Height of the button */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-button:hover {
+  transform: scale(1.2); /* Enlarge on hover */
+}
+
+/* Menu Buttons */
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px; /* Space above buttons */
+}
+
+.menu-buttons button {
+  width: 100%; /* Full width */
+  padding: 10px; /* Padding */
+  border: none; /* Remove border */
+  background-color: bisque; /* Primary color */
+  color: black; /* Text color */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor */
+  transition: background-color 0.3s; /* Transition for hover effect */
+  font-size: 1rem; /* Adjust font size */
+}
+
+.menu-buttons button:hover {
+  background-color: #0056b3; /* Darker on hover */
+}
+
+/* Main Content */
+.main-content {
+  flex-grow: 1; /* Take remaining space */
+  padding: 20px; /* Padding */
+  overflow-y: auto; /* Scroll if content overflows */
+  background-color: #FFD09B; /* Background for main content */
+}
+
+.main-content h1 {
+  margin-top: 0;
+  font-size: 2rem; /* Adjust as needed */
+}
+
+.main-content p {
+  font-size: 1rem; /* Adjust as needed */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .sidebar-container {
+    width: 100%; /* Full width on smaller screens */
+    position: relative; /* Ensure it stacks properly */
+    box-shadow: none; /* Remove shadow for mobile view */
+  }
+
+  .hamburger-menu {
+    width: 90%; /* Adjust width for smaller screens */
+    padding: 15px; /* Adjust padding */
+  }
+
+  .toggle-button {
+    font-size: 20px; /* Reduced font size */
+  }
+
+  .menu-buttons button {
+    font-size: 0.9rem; /* Smaller font size */
+  }
+}
