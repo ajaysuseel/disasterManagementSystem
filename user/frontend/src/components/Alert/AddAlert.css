@@ -1,0 +1,59 @@
+/* AddAlert.css */
+
+.alert-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;     /* Center vertically */
+    height: 100vh;          /* Full viewport height */
+    background-color: #FFD09B; /* Light gray background */
+  }
+  
+  .alert-form-box {
+    background-color: bisque; /* White background for the box */
+    border-radius: 8px;      /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 20px;           /* Inner spacing */
+    width: 400px;            /* Fixed width for the form */
+  }
+  
+  .alert-heading {
+    text-align: center;      /* Center the heading */
+  }
+  
+  .alert-label {
+    display: block;          /* Block display for labels */
+    margin: 10px 0 5px;     /* Margin for labels */
+  }
+  
+  .alert-input,
+  .alert-textarea {
+    width: 100%;             /* Full width inputs */
+    padding: 10px;          /* Inner spacing */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 4px;     /* Rounded corners for inputs */
+  }
+  
+  .alert-button {
+    width: 100%;             /* Full width button */
+    padding: 10px;          /* Inner spacing */
+    background-color: #007bff; /* Bootstrap blue color */
+    color: white;           /* White text */
+    border: none;           /* Remove border */
+    border-radius: 4px;     /* Rounded corners */
+    cursor: pointer;        /* Pointer cursor */
+  }
+  
+  .alert-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+  
+  .alert-message {
+    text-align: center;      /* Center messages */
+  }
+  
+  .alert-textarea {
+    resize: none;            /* Disable resizing */
+    max-height: 100px;      /* Maximum height before scrolling */
+    overflow-y: auto;       /* Enable vertical scrolling */
+  }
+  

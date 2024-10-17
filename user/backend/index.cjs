@@ -168,7 +168,10 @@ app.get('/api/report', async (req, res) => {
 
 // (Optional) Endpoint to Insert Disaster Events
 app.post('/api/update', async (req, res) => {
-  const { disaster_type, disaster_ward, disaster_loc_x, disaster_loc_y, incident_date, losses, area_coverage } = req.body;
+  const { disaster_type, disaster_ward, disaster_loc, incident_date, losses, area_coverage } = req.body;
+
+  // Split the disaster_loc to get x and y coordinates
+  const [longitude, latitude] = disaster_loc.split(',').map(coord => parseFloat(coord.trim()));
 
   try {
     const insertQuery = `
@@ -176,41 +179,74 @@ app.post('/api/update', async (req, res) => {
       VALUES ($1, $2, POINT($3, $4), $5, $6, $7)
       RETURNING disaster_id, disaster_type, disaster_ward, disaster_loc, incident_date, losses, area_coverage
     `;
-    const values = [disaster_type, disaster_ward, parseFloat(disaster_loc_x), parseFloat(disaster_loc_y), incident_date, losses, area_coverage];
+    const values = [disaster_type, disaster_ward, longitude, latitude, incident_date, losses, area_coverage];
+
+    console.log('Insert Values:', values); // Log the values being inserted
+
     const result = await pool.query(insertQuery, values);
 
+    // Process the result
     const newDisaster = result.rows[0];
-    let x, y;
-
-    if (typeof newDisaster.disaster_loc === 'object' && !Array.isArray(newDisaster.disaster_loc)) {
-      x = newDisaster.disaster_loc.x;
-      y = newDisaster.disaster_loc.y;
-    } else if (Array.isArray(newDisaster.disaster_loc)) {
-      [x, y] = newDisaster.disaster_loc;
-    } else if (typeof newDisaster.disaster_loc === 'string') {
-      const locString = newDisaster.disaster_loc.replace(/[()]/g, '');
-      [x, y] = locString.split(',').map(coord => parseFloat(coord.trim()));
-    } else {
-      x = null;
-      y = null;
-      console.warn('Unexpected disaster_loc format:', newDisaster.disaster_loc);
-    }
-
-    res.status(201).json({
-      disaster_id: newDisaster.disaster_id,
-      disaster_type: newDisaster.disaster_type,
-      disaster_ward: newDisaster.disaster_ward,
-      disaster_loc_x: x,
-      disaster_loc_y: y,
-      incident_date: newDisaster.incident_date,
-      losses: newDisaster.losses,
-      area_coverage: newDisaster.area_coverage
-    });
+    res.status(201).json(newDisaster);
   } catch (error) {
     console.error('Error inserting disaster event:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+
+//Alerts
+
+// Add alert
+app.post('/api/alerts', async (req, res) => {
+  const { alert_type, ward, description } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO Alerts (alert_type, alert_ward, alert_message, is_active, created_at) VALUES ($1, $2, $3, TRUE, NOW()) RETURNING *',
+      [alert_type, ward, description]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+
+
+app.put('/api/alerts/:id/deactivate', async (req, res) => {
+  const { id } = req.params;
+  try {
+    // Ensure that the column name matches your schema (active or is_active)
+    const result = await pool.query(
+      'UPDATE Alerts SET is_active = FALSE, deactivated_at = NOW() WHERE alert_id = $1',
+      [id]
+    );
+
+    // Check if any row was affected
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'Alert not found' });
+    }
+
+    res.status(200).json({ message: 'Alert deactivated' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Fetch active alerts
+app.get('/api/alerts/active', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM Alerts WHERE is_active = TRUE');
+    // Ensure that we return an array even if it's empty
+    res.status(200).json(Array.isArray(result.rows) ? result.rows : []);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

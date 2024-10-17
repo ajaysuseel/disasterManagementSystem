@@ -1,0 +1,31 @@
+/* AlertManagement.css */
+.alert-management-wrapper {
+    padding: 20px;
+}
+
+.alert-management-toggle-container {
+    display: flex;
+    align-items: center; /* Center align items */
+}
+
+.label {
+    font-size: 16px; /* Default font size */
+    margin: 0 10px; /* Spacing around the labels */
+    transition: color 0.3s; /* Smooth transition for color change */
+    font-family: 'Roboto', sans-serif; /* Change to desired font family */
+}
+
+.label.active {
+    color: #007BFF; /* Active color when selected */
+    font-weight: bold; /* Make the active label bold */
+}
+
+.alert-select {
+    width: 100%; /* Full width */
+    padding: 10px; /* Padding for better touch */
+    margin: 10px 0; /* Margin for spacing */
+    border: 1px solid #ccc; /* Border styling */
+    border-radius: 4px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+}
+

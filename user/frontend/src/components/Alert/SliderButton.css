@@ -1,0 +1,27 @@
+/* SliderButton.css */
+.slider-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 60px; /* Width of the slider */
+    height: 30px; /* Height of the slider */
+    border: 2px solid #4E31AA; /* Border color */
+    border-radius: 15px; /* Rounded corners */
+    position: relative; /* For absolute positioning of the slider */
+    background-color: #f5f5f5; /* Background color */
+    margin: 0 10px; /* Spacing */
+}
+
+.slider {
+    width: 26px; /* Width of the sliding part */
+    height: 26px; /* Height of the sliding part */
+    background-color: #007bff; /* Background color of the slider */
+    border-radius: 50%; /* Make it circular */
+    position: absolute;
+    transition: transform 0.3s ease; /* Smooth transition */
+    left: 2px; /* Initial position on the left */
+}
+
+.slider.active {
+    transform: translateX(30px); /* Move to the right when active */
+}
