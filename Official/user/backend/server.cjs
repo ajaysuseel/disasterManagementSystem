@@ -51,7 +51,7 @@ app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const result = await pool.query('SELECT * FROM Users WHERE username = $1', [username]);
+    const result = await pool.query('SELECT * FROM Officials WHERE username = $1', [username]);
 
     if (result.rows.length === 0) {
       return res.status(401).json({ message: 'Invalid username or password' });
@@ -243,6 +243,76 @@ app.get('/api/alerts/active', async (req, res) => {
     res.status(200).json(Array.isArray(result.rows) ? result.rows : []);
   } catch (error) {
     console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
+// Signup endpoint
+app.post('/api/rsignup', async (req, res) => {
+  const { email, password } = req.body;
+
+  // Basic email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: 'Invalid email format' });
+  }
+
+  // Password validation (modify as needed)
+  if (password.length < 6) {
+    return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+  }
+
+  try {
+    // Check if user already exists
+    const existingUser = await pool.query('SELECT * FROM Residents WHERE email = $1', [email]);
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ message: 'Email already in use' });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Insert new resident
+    const newResident = await pool.query(
+      'INSERT INTO Residents (email, password, created_at) VALUES ($1, $2, NOW()) RETURNING *',
+      [email, hashedPassword]
+    );
+
+    res.status(201).json({
+      message: 'User registered successfully',
+      resident: newResident.rows[0],
+    });
+  } catch (error) {
+    console.error('Database error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Login a resident
+app.post('/api/rlogin', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const result = await pool.query('SELECT * FROM Residents WHERE email = $1', [email]);
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    const existingUser = result.rows[0];
+
+    const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    // Instead of a token, return only the email
+    res.json({ email: existingUser.email });
+  } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
