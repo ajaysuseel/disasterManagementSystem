@@ -1,0 +1,99 @@
+html, body {
+    background-color: #FFE6A5;
+}
+
+.auth-top {
+    height: 100%;
+    background-color: #FFE6A5;
+    margin: 0;
+    padding: 0;
+}
+
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    max-width: 400px;
+    margin: auto;
+    margin-top: 40px;
+    background-color: #FFBF61; /* Background color */
+    color: black; /* Text color */
+    border-radius: 8px; /* Optional: for a rounded container */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Box shadow added */
+}
+
+.login-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    width: 100%;
+    margin: 10px 0;
+}
+
+label {
+    margin-bottom: 5px;
+    display: block; /* Ensures the label is above the input */
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px; /* Space between label and input */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white; /* Input field background */
+    color: black; /* Input text color */
+}
+
+.input-field:focus {
+    border-color: #FFBF61; /* Focus color for input */
+    outline: none; /* Remove default outline */
+}
+
+.login-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+.signup-link {
+    margin-top: 15px; /* Space above the signup link */
+    text-align: center; /* Center the link */
+}
+
+.signup-link a {
+    color: #007bff; /* Link color */
+    text-decoration: none; /* No underline */
+}
+
+.signup-link a:hover {
+    text-decoration: underline; /* Underline on hover for better visibility */
+}
+.show-password {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+  }
+  
+  .show-password input {
+    margin-right: 5px; /* Space between checkbox and label */
+  }
+  
