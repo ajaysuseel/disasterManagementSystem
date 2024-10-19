@@ -8,6 +8,8 @@ import DisasterUpdate from './components/DisasterUpdate/DisasterUpdate';
 import Report from './components/Report/Report';
 import Help from './components/Help/Help';
 import AlertManagement from './components/Alert/AlertManagement';
+import HazardUpdate from './components/HazardUpdate/HazardUpdate';
+import HazardReport from './components/HazardReport/HazardReport';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/report" element={<Report />}/>
         <Route path="/help" element={<Help />}/>
         <Route path="/alert" element={<AlertManagement/>}/>
+        <Route path="/hupdate" element={<HazardUpdate/>}/>
+        <Route path="/hreport" element={<HazardReport/>}/>
       </Routes>
     </Router>
   );

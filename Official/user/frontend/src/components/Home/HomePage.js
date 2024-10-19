@@ -48,6 +48,8 @@ const HomePage = () => {
               <div className="menu-buttons">
                 <button type="button" onClick={() => navigate('/update')}>Disaster Update</button>
                 <button type="button" onClick={() => navigate('/report')}>Disaster Report</button>
+                <button type="button" onClick={() => navigate('/hupdate')}>Hazard Update</button>
+                <button type="button" onClick={() => navigate('/hreport')}>Hazard Report</button>
                 <button type="button" onClick={() => navigate('/help')}>Help</button>
                 <button type="button" onClick={() => navigate('/alert')}>Alerts</button>
                 <button className="logout-button" onClick={handleLogout}>Logout</button>
