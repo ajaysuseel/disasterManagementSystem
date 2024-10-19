@@ -1,13 +1,18 @@
+// src/components/Login.js
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate for navigation
+import { useUser } from '../UserContext'; // Import the useUser hook to access context
 import './Login.css'; // Include a CSS file for auth styles
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const { setUsername, setEmail, setName } = useUser(); // Get setUsername, setEmail, and setName from the context
+  const [email, setEmailInput] = useState(''); // Change state variable for clarity
   const [password, setPassword] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState(''); // 'success' or 'error'
   const [showPassword, setShowPassword] = useState(false); // State for showing/hiding password
+
+  const navigate = useNavigate(); // Create an instance of navigate
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -27,18 +32,19 @@ const Login = () => {
         throw new Error(data.message || 'Login failed. Please try again.');
       }
 
-      console.log(data); // Handle login success (e.g., redirect, store token)
+      // Set the email and name from the response
+      setEmail(data.email); // Set the email in context
+      setName(data.name); // Set the name in context
 
       // Optionally, you can show a success message
       setAlertMessage('Login successful!');
       setAlertType('success');
 
-      // Automatically hide the alert after 2 seconds
+      // Navigate to /home after successful login
       setTimeout(() => {
-        setAlertMessage('');
-        setAlertType('');
-      }, 2000);
-      
+        navigate('/home');
+      }, 1000); // Optional: delay the navigation by 1 second for alert display
+
     } catch (error) {
       // Set error message from the backend or a generic message
       setAlertMessage(error.message);
@@ -64,7 +70,7 @@ const Login = () => {
               id="email"
               className="input-field"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmailInput(e.target.value)} // Change input to email state
               required
             />
           </div>

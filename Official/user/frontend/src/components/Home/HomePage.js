@@ -47,7 +47,6 @@ const HomePage = () => {
               </button>
               <div className="menu-buttons">
                 <button type="button" onClick={() => navigate('/update')}>Disaster Update</button>
-                <button type="button" onClick={() => navigate('/mapping')}>Disaster Mapping</button>
                 <button type="button" onClick={() => navigate('/report')}>Disaster Report</button>
                 <button type="button" onClick={() => navigate('/help')}>Help</button>
                 <button type="button" onClick={() => navigate('/alert')}>Alerts</button>

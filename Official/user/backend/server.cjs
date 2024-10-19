@@ -251,7 +251,7 @@ app.get('/api/alerts/active', async (req, res) => {
 
 // Signup endpoint
 app.post('/api/rsignup', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, name, username, age, phone_number, ward } = req.body;
 
   // Basic email validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -262,6 +262,24 @@ app.post('/api/rsignup', async (req, res) => {
   // Password validation (modify as needed)
   if (password.length < 6) {
     return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+  }
+
+  // Additional field validation
+  if (!name || name.trim() === '') {
+    return res.status(400).json({ message: 'Name is required' });
+  }
+  
+  if (!username || username.trim() === '') {
+    return res.status(400).json({ message: 'Username is required' });
+  }
+  
+  if (!age || age < 1) {
+    return res.status(400).json({ message: 'Valid age is required' });
+  }
+
+  const phoneRegex = /^\d{10}$/; // Adjust regex as necessary for your phone format
+  if (!phoneRegex.test(phone_number)) {
+    return res.status(400).json({ message: 'Invalid phone number format' });
   }
 
   try {
@@ -276,13 +294,13 @@ app.post('/api/rsignup', async (req, res) => {
 
     // Insert new resident
     const newResident = await pool.query(
-      'INSERT INTO Residents (email, password, created_at) VALUES ($1, $2, NOW()) RETURNING *',
-      [email, hashedPassword]
+      'INSERT INTO Residents (email, password, name, username, age, phone_number, ward, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW()) RETURNING *',
+      [email, hashedPassword, name, username, age, phone_number, ward]
     );
 
     res.status(201).json({
       message: 'User registered successfully',
-      resident: newResident.rows[0],
+      resident: newResident.rows[0], // Return the newly created resident object
     });
   } catch (error) {
     console.error('Database error:', error);
@@ -295,6 +313,7 @@ app.post('/api/rlogin', async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Query to find the resident by email
     const result = await pool.query('SELECT * FROM Residents WHERE email = $1', [email]);
 
     if (result.rows.length === 0) {
@@ -303,19 +322,55 @@ app.post('/api/rlogin', async (req, res) => {
 
     const existingUser = result.rows[0];
 
+    // Validate the password
     const isPasswordValid = await bcrypt.compare(password, existingUser.password);
 
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    // Instead of a token, return only the email
-    res.json({ email: existingUser.email });
+    // Respond with email and name from the Residents table
+    res.json({ email: existingUser.email, name: existingUser.name });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+
+// Add this endpoint to your existing Express routes
+app.get('/api/ward', async (req, res) => {
+  const { email } = req.query; // Get email from query parameters
+
+  try {
+    const result = await pool.query('SELECT ward FROM Residents WHERE email = $1', [email]); // Adjust the query as needed
+    if (result.rows.length > 0) {
+      res.json({ ward: result.rows[0].ward });
+    } else {
+      res.status(404).json({ message: 'Ward not found for the provided email.' });
+    }
+  } catch (error) {
+    console.error('Error fetching ward:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+  
+
+
+
+// Example endpoint to get alerts by ward
+app.get('/api/ralerts', async (req, res) => {
+  const { ward } = req.query; // Get ward from query parameters
+
+  try {
+    const result = await pool.query('SELECT * FROM Alerts WHERE alert_ward = $1 AND is_active = true ORDER BY created_at DESC', [ward]);
+    res.json(result.rows); // Send the fetched alerts back as a JSON response
+  } catch (error) {
+    console.error('Error fetching alerts:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 
 
 app.listen(port, () => {
