@@ -21,6 +21,8 @@ const Navbar = () => {
         <a href="#" onClick={() => navigate('/update')} className="navbar-item">Disaster Update</a>
         <a href="#" onClick={() => navigate('/mapping')} className="navbar-item">Disaster Mapping</a>
         <a href="#" onClick={() => navigate('/report')} className="navbar-item">Disaster Report</a>
+        <a href="#" onClick={() => navigate('/hupdate')} className="navbar-item">Hazard Update</a>
+        <a href="#" onClick={() => navigate('/hreport')} className="navbar-item">Hazard Report</a>
         <a href="#" onClick={() => navigate('/help')} className="navbar-item">Help</a>
         <a href="#" onClick={handleLogout} className="navbar-item logout-button">Logout</a>
       </div>
