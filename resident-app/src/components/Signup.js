@@ -43,7 +43,6 @@ const Signup = () => {
           email: formData.email,
           password: formData.password,
           name: formData.name,
-          username: formData.username,
           age: formData.age,
           phone_number: formData.phone_number,
           ward: formData.ward,

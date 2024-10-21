@@ -391,7 +391,7 @@ app.get('/api/alerts/active', async (req, res) => {
 
 // Signup endpoint
 app.post('/api/rsignup', async (req, res) => {
-  const { email, password, name, username, age, phone_number, ward } = req.body;
+  const { email, password, name, age, phone_number, ward } = req.body;
 
   // Basic email validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -409,9 +409,7 @@ app.post('/api/rsignup', async (req, res) => {
     return res.status(400).json({ message: 'Name is required' });
   }
   
-  if (!username || username.trim() === '') {
-    return res.status(400).json({ message: 'Username is required' });
-  }
+
   
   if (!age || age < 1) {
     return res.status(400).json({ message: 'Valid age is required' });
@@ -434,8 +432,8 @@ app.post('/api/rsignup', async (req, res) => {
 
     // Insert new resident
     const newResident = await pool.query(
-      'INSERT INTO Residents (email, password, name, username, age, phone_number, ward, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW()) RETURNING *',
-      [email, hashedPassword, name, username, age, phone_number, ward]
+      'INSERT INTO Residents (email, password, name, age, phone_number, ward, created_at) VALUES ($1, $2, $3, $4, $5, $6, NOW()) RETURNING *',
+      [email, hashedPassword, name, age, phone_number, ward]
     );
 
     res.status(201).json({
