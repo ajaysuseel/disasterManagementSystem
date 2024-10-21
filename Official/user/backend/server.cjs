@@ -26,7 +26,7 @@ app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const userCheck = await pool.query('SELECT * FROM Users WHERE username = $1', [username]);
+    const userCheck = await pool.query('SELECT * FROM officials WHERE username = $1', [username]);
 
     if (userCheck.rows.length > 0) {
       return res.status(400).json({ message: 'Username already exists' });
@@ -34,7 +34,7 @@ app.post('/api/register', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const insertQuery = 'INSERT INTO Users (username, password) VALUES ($1, $2) RETURNING user_id, username';
+    const insertQuery = 'INSERT INTO officials (username, password) VALUES ($1, $2) RETURNING user_id, username';
     const insertResult = await pool.query(insertQuery, [username, hashedPassword]);
 
     const newUser = insertResult.rows[0];
