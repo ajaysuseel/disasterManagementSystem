@@ -1,0 +1,67 @@
+.header1 {
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 50px;
+}
+
+.help-page {
+    padding: 20px;
+    margin-top: 0px;
+    font-family: Arial, sans-serif;
+}
+
+.faq, .contact-form {
+    margin-top: 20px;
+    border: 1px solid #000000;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.faq-item {
+    margin-bottom: 15px;
+}
+
+.input-row {
+    display: flex; /* Flexbox for row layout */
+    justify-content: space-between; /* Space between items */
+    margin-bottom: 15px; /* Space below the row */
+}
+
+.input-group {
+    flex: 1; /* Allow groups to grow */
+    margin-right: 10px; /* Space between the two input groups */
+}
+
+.input-group:last-child {
+    margin-right: 0; /* Remove margin for the last group */
+}
+
+label {
+    display: block; /* Block display for labels */
+    margin-bottom: 5px; /* Space between label and input */
+}
+
+input, textarea {
+    width: 100%; /* Full width for inputs */
+    padding: 10px; /* Padding for inputs */
+    border: 1px solid black; /* Border style */
+    border-radius: 10px; /* Rounded corners */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+textarea {
+    padding: 15px; /* Consistent padding for textarea */
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
