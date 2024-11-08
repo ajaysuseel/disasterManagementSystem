@@ -48,7 +48,7 @@ const LoginPage = () => {
       <header className="login-header">
         <h1>Local Hazard & Disaster Management System</h1>
         <p>For Panchayat Administration Only</p>
-        <p>Panchayat: <strong>Kottamkara Grama Panchayat</strong></p>
+        <p>Panchayat: <strong>Grama Panchayat</strong></p>
         <p>Administrator: <strong>Panchayat Officer</strong></p>
       </header>
 

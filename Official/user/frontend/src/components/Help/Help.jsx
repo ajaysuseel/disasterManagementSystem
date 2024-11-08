@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Navbar from '../Navbar/Navbar';
-import './help.css';
+import './help.css';  // Import the restricted CSS for the Help page
 
 const Help = () => {
     const [name, setName] = useState('');
@@ -19,69 +19,40 @@ const Help = () => {
     };
 
     return (
-        <div className="help-page">
+        <div className="help-page">  {/* Unique wrapper to restrict styles */}
             <Navbar />
-            <h1 className="header1">Help Center</h1>
+            <h1 className="help-header1">Help Center</h1>
 
-            <section className="faq">
+            <section className="help-faq">
                 <h3><strong>Frequently Asked Questions</strong></h3>
-                <div className="faq-item">
+                <div className="help-faq-item">
                     <h4>What is this application about?</h4>
-                    <p>This application integrates local authorities in India with citizens to improve disaster/risk management.</p>
+                    <p>This application serves as a bridge between local authorities and citizens to enhance disaster and risk management efforts.</p>
                 </div>
-                <div className="faq-item">
-                    <h4>Where can I ask my query?</h4>
-                    <p>You can ask your queries below.</p>
+                <div className="help-faq-item">
+                    <h4>How can I submit a query?</h4>
+                    <p>If you have any questions, please contact us</p>
                 </div>
-                <div className="faq-item">
-                    <h4>How can a user be added?</h4>
-                    <p>user can be added by giving request to the admin.</p>
+                <div className="help-faq-item">
+                    <h4>How can I be added as a user?</h4>
+                    <p>To be added as a user, please submit a request to the admin for approval.</p>
                 </div>
-                <div className="faq-item">
-                    <h4>How can I know about a particular event in a particular place?</h4>
-                    <p>You can know and understand it by going to the disaster report section in the main menu.</p>
+                <div className="help-faq-item">
+                    <h4>How can I access information about a specific event in a particular location?</h4>
+                    <p>You can view detailed information about specific events by visiting the "Disaster Report" section in the main menu.</p>
                 </div>
-                {/* Other FAQ items here */}
+                {/* Additional FAQ items can be added here */}
             </section>
 
-            <section className="contact-form">
+            <section className="help-contact-form">
                 <h3><strong>Contact Us</strong></h3>
-                {submitted ? (
-                    <p>Thank you for your message! We will get back to you soon.</p>
-                
-                ) : (
-                    <form onSubmit={handleSubmit}>
-                        <div className="input-row">
-                            <div className="input-group">
-                                <label>Name:</label>
-                                <input className="name"
-                                    type="text"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="input-group">
-                                <label>Email:</label>
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <label>Message:</label>
-                            <textarea
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <button type="submit">Send</button>
-                    </form>
-                )}
+                <p>If you have any further questions or concerns, please don't hesitate to reach out to us at the following email addresses:</p>
+                <ul className="email-list">
+                    <li><a href="mailto:ajaysuseel673@gmail.com">ajaysuseel673@gmail.com</a></li>
+                    <li><a href="mailto:advaithmanojpulparambil@gmail.com">advaithmanojpulparambil@gmail.com</a></li>
+                    <li><a href="mailto:sabarijnv10@gmail.com">sabarijnv10@gmail.com</a></li>
+                    <li><a href="mailto:kdevpv2003@gmail.com">kdevpv2003@gmail.com</a></li>
+                </ul>
             </section>
         </div>
     );
