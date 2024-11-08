@@ -1,91 +1,91 @@
-// src/components/ResidentHomePage.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../UserContext'; // Import the useUser hook
-import './Home.css'; // New CSS file for resident-specific styles
+import { useUser } from '../UserContext';
+import './Home.css';
 
 const ResidentHomePage = () => {
   const navigate = useNavigate();
-  const { email, name, setEmail } = useUser(); // Get email and name from context
+  const { email, name, setEmail } = useUser();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const [alerts, setAlerts] = useState([]); // State to hold active alerts
-  const [loading, setLoading] = useState(true); // Loading state
-  const [errorMessage, setErrorMessage] = useState(''); // State for error messages
+  const [alerts, setAlerts] = useState(() => {
+    // Initialize alerts from localStorage on first load
+    const savedAlerts = localStorage.getItem('alerts');
+    return savedAlerts ? JSON.parse(savedAlerts) : [];
+  });
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
+  // Effect to handle user authentication and alert fetching interval
   useEffect(() => {
     if (!email) {
-      navigate('/home'); // Navigate to login if email is not available
+      navigate('/home'); // Redirect if email is not available
     } else {
-      fetchWard(); // Fetch ward using email when available
-      const intervalId = setInterval(fetchAlerts, 10000); // Fetch alerts every 30 seconds
-      return () => clearInterval(intervalId); // Cleanup interval on unmount
+      fetchWardAndAlerts(); // Fetch ward and initial alerts
+      const intervalId = setInterval(fetchAlerts, 30000); // Fetch alerts every 30 seconds
+      return () => clearInterval(intervalId); // Clear interval on unmount
     }
-  }, [navigate, email]);
+  }, [email, navigate]);
 
-  // Function to fetch the user's ward based on email
-  const fetchWard = async () => {
+  // Function to fetch the ward and alerts for the user
+  const fetchWardAndAlerts = async () => {
     setLoading(true);
-    setErrorMessage(''); // Reset error message
+    setErrorMessage('');
     try {
-      const response = await fetch(`http://localhost:5000/api/ward?email=${email}`); // Fetch user data using email
+      const response = await fetch(`http://localhost:5000/api/ward?email=${email}`);
       const userData = await response.json();
 
       if (!response.ok) {
         throw new Error(userData.message || 'Failed to fetch user data.');
       }
 
-      const ward = userData.ward; // Assuming userData has a ward property
-      fetchAlerts(ward); // Fetch alerts for the fetched ward
+      const ward = userData.ward;
+      fetchAlerts(ward); // Fetch alerts based on the ward
     } catch (error) {
       console.error('Error fetching ward:', error);
-      setErrorMessage(error.message); // Set error message for display
+      setErrorMessage(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  // Function to fetch active alerts for the specified ward
-  const fetchAlerts = async () => {
-    if (!email) return; // Return early if email is not available
+  // Function to fetch alerts based on the ward
+  const fetchAlerts = async (ward) => {
+    if (!ward) return;
 
     setLoading(true);
-    setErrorMessage(''); // Reset error message
+    setErrorMessage('');
     try {
-      const response = await fetch(`http://localhost:5000/api/ward?email=${email}`); // Fetch user data to get ward
-      const userData = await response.json();
-      const ward = userData.ward; // Assuming userData has a ward property
-
-      const alertResponse = await fetch(`http://localhost:5000/api/ralerts?ward=${ward}`); // Fetch alerts for the specified ward
+      const alertResponse = await fetch(`http://localhost:5000/api/ralerts?ward=${ward}`);
       const data = await alertResponse.json();
 
       if (!alertResponse.ok) {
         throw new Error(data.message || 'Failed to fetch alerts.');
       }
 
-      setAlerts(data); // Set the fetched alerts
+      setAlerts(data);
+      localStorage.setItem('alerts', JSON.stringify(data)); // Store alerts in localStorage
     } catch (error) {
       console.error('Error fetching alerts:', error);
-      setErrorMessage(error.message); // Set error message for display
+      setErrorMessage(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const toggleMenu = () => {
-    setIsMenuVisible(prev => !prev);
-  };
+  const toggleMenu = () => setIsMenuVisible((prev) => !prev);
 
   const handleLogout = () => {
     localStorage.removeItem('username');
-    setEmail(''); // Clear email from context on logout
-    navigate('/'); // Navigate to the login page after logout
+    localStorage.removeItem('alerts'); // Clear alerts from localStorage on logout
+    setEmail('');
+    navigate('/');
   };
 
   return (
     <div className="resident-homepage">
       <div className="resident-sidebar-container">
         <div className="resident-profile-header">
-          <h2>{name || 'Resident'}</h2> {/* Display name from context */}
+          <h2>{name || 'Resident'}</h2>
           <button className="resident-toggle-button" onClick={toggleMenu} aria-label="Toggle Menu">
             {isMenuVisible ? '✖' : '☰'}
           </button>
@@ -107,18 +107,18 @@ const ResidentHomePage = () => {
       </div>
 
       <div className="resident-main-content">
-        <h1>Welcome, {name || 'Resident'}!</h1> {/* Use name instead of email */}
+        <h1>Welcome, {name || 'Resident'}!</h1>
 
         {loading ? (
           <p>Loading alerts...</p>
         ) : errorMessage ? (
-          <p className="error-message">{errorMessage}</p> // Display error message
+          <p className="error-message">{errorMessage}</p>
         ) : (
           <div className="alerts-container">
             {alerts.length > 0 ? (
-              alerts.map(alert => (
-                <div key={alert.alert_id} className="alert-box"> {/* Ensure alert.id is unique */}
-                  <p>{alert.alert_message}</p> {/* Display the description of each alert */}
+              alerts.map((alert) => (
+                <div key={alert.alert_id} className="alert-box">
+                  <p>{alert.alert_message}</p>
                 </div>
               ))
             ) : (

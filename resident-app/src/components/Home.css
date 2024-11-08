@@ -101,6 +101,7 @@ h1 {
     color: white; /* Example text color */
     border: 1px solid #f5c6cb; /* Example border color */
     border-radius: 8px; /* Rounded edges */
+    
     padding: 4px;
     margin-bottom: 10px; /* Spacing between alerts */
     transition: transform 0.2s; /* Optional hover effect */

@@ -3,6 +3,7 @@ import AddAlert from './AddAlert';
 import DeactivateAlert from './DeactivateAlert';
 import SliderButton from './SliderButton'; // Import the SliderButton
 import './AlertManagement.css'; // Import the CSS for styling
+import Navbar from '../Navbar/Navbar'
 
 const AlertManagement = () => {
   const [isAddAlertActive, setIsAddAlertActive] = useState(false); // True means "Add Alert"
@@ -13,6 +14,7 @@ const AlertManagement = () => {
 
   return (
     <div className="alert-management-wrapper">
+      <Navbar/>
       <div className="alert-management-toggle-container">
         {/* Highlight the active label based on the state */}
         <span className={`label ${!isAddAlertActive ? 'active' : ''}`}>Deactivate Alert</span>

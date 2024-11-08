@@ -160,7 +160,7 @@ const Report = () => {
         <table className="report-table">
           <thead>
             <tr>
-              <th>ID</th>
+              
               <th>Type</th>
               <th>Location</th>
               <th>Date</th>
@@ -177,7 +177,7 @@ const Report = () => {
             ) : (
               filteredData.map((disaster) => (
                 <tr key={disaster.disaster_id}>
-                  <td>{disaster.disaster_id}</td>
+                  
                   <td>{disaster.disaster_type}</td>
                   <td>
                     {disaster.disaster_loc_x}, {disaster.disaster_loc_y}

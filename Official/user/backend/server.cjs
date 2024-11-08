@@ -166,14 +166,20 @@ app.get('/api/report', async (req, res) => {
   }
 });
 
-// (Optional) Endpoint to Insert Disaster Events
+// Endpoint to insert disaster events
 app.post('/api/update', async (req, res) => {
   const { disaster_type, disaster_ward, disaster_loc, incident_date, losses, area_coverage } = req.body;
 
-  // Split the disaster_loc to get x and y coordinates
-  const [longitude, latitude] = disaster_loc.split(',').map(coord => parseFloat(coord.trim()));
-
   try {
+    // Extract longitude and latitude from disaster_loc
+    const [longitude, latitude] = disaster_loc.replace(/[()]/g, '').split(',').map(coord => parseFloat(coord.trim()));
+
+    // Validate latitude and longitude
+    if (isNaN(longitude) || isNaN(latitude)) {
+      return res.status(400).json({ message: 'Invalid latitude and longitude values.' });
+    }
+
+    // Insert data into PostgreSQL with POINT type for location
     const insertQuery = `
       INSERT INTO DisasterEvents (disaster_type, disaster_ward, disaster_loc, incident_date, losses, area_coverage)
       VALUES ($1, $2, POINT($3, $4), $5, $6, $7)
@@ -181,13 +187,34 @@ app.post('/api/update', async (req, res) => {
     `;
     const values = [disaster_type, disaster_ward, longitude, latitude, incident_date, losses, area_coverage];
 
-    console.log('Insert Values:', values); // Log the values being inserted
-
     const result = await pool.query(insertQuery, values);
-
-    // Process the result
     const newDisaster = result.rows[0];
-    res.status(201).json(newDisaster);
+
+    // Handle various formats for disaster_loc from PostgreSQL
+    let x, y;
+    if (newDisaster.disaster_loc && typeof newDisaster.disaster_loc === 'object') {
+      ({ x, y } = newDisaster.disaster_loc);
+    } else if (Array.isArray(newDisaster.disaster_loc)) {
+      [x, y] = newDisaster.disaster_loc;
+    } else if (typeof newDisaster.disaster_loc === 'string') {
+      const locString = newDisaster.disaster_loc.replace(/[()]/g, '');
+      [x, y] = locString.split(',').map(coord => parseFloat(coord.trim()));
+    } else {
+      x = null;
+      y = null;
+      console.warn('Unexpected disaster_loc format:', newDisaster.disaster_loc);
+    }
+
+    res.status(201).json({
+      disaster_id: newDisaster.disaster_id,
+      disaster_type: newDisaster.disaster_type,
+      disaster_ward: newDisaster.disaster_ward,
+      disaster_loc_x: x,
+      disaster_loc_y: y,
+      incident_date: newDisaster.incident_date,
+      losses: newDisaster.losses,
+      area_coverage: newDisaster.area_coverage,
+    });
   } catch (error) {
     console.error('Error inserting disaster event:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -195,38 +222,40 @@ app.post('/api/update', async (req, res) => {
 });
 
 app.post('/api/hupdate', async (req, res) => {
-  const { hazard_type, hazard_ward, hazard_loc_x, hazard_loc_y, incident_date, losses } = req.body;
-
-  // Log the incoming request body to ensure data is present
-  console.log('Request Body:', req.body);
+  const { hazard_type, hazard_ward, hazard_loc, incident_date, losses } = req.body;
 
   try {
+    // Parse latitude and longitude from hazard_loc
+    const [longitude, latitude] = hazard_loc.replace(/[()]/g, '').split(',').map(coord => parseFloat(coord.trim()));
+
+    // Validate latitude and longitude
+    if (isNaN(longitude) || isNaN(latitude)) {
+      return res.status(400).json({ message: 'Invalid latitude and longitude values.' });
+    }
+
+    // SQL query to insert data with POINT type for location
     const insertQuery = `
       INSERT INTO HazardEvents (hazard_type, hazard_ward, hazard_loc, incident_date, losses)
       VALUES ($1, $2, POINT($3, $4), $5, $6) 
       RETURNING hazard_id, hazard_type, hazard_ward, hazard_loc, incident_date, losses
     `;
 
-    // Log the query and values
     const values = [
       hazard_type,
       hazard_ward,
-      parseFloat(hazard_loc_x),  // Ensure these are valid floats
-      parseFloat(hazard_loc_y),
-      incident_date,             // Ensure date is properly formatted
+      longitude,
+      latitude,
+      incident_date,
       losses
     ];
-    console.log('SQL Query:', insertQuery);
-    console.log('Query Values:', values);
 
     const result = await pool.query(insertQuery, values);
     const newHazard = result.rows[0];
 
-    // Handling the hazard_loc as a point
+    // Handle different formats of hazard_loc returned from PostgreSQL
     let x, y;
-    if (typeof newHazard.hazard_loc === 'object' && !Array.isArray(newHazard.hazard_loc)) {
-      x = newHazard.hazard_loc.x;
-      y = newHazard.hazard_loc.y;
+    if (newHazard.hazard_loc && typeof newHazard.hazard_loc === 'object') {
+      ({ x, y } = newHazard.hazard_loc);
     } else if (Array.isArray(newHazard.hazard_loc)) {
       [x, y] = newHazard.hazard_loc;
     } else if (typeof newHazard.hazard_loc === 'string') {
@@ -248,7 +277,7 @@ app.post('/api/hupdate', async (req, res) => {
       losses: newHazard.losses,
     });
   } catch (error) {
-    console.error('Error inserting data:', error); // Log detailed error
+    console.error('Error inserting data:', error);
     res.status(500).json({ message: 'Server error.', error: error.message });
   }
 });

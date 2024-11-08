@@ -160,7 +160,7 @@ const HazardReport = () => {
           <table className="report-table">
             <thead>
               <tr>
-                <th>ID</th>
+                
                 <th>Type</th>
                 <th>Location</th>
                 <th>Date</th>
@@ -176,7 +176,7 @@ const HazardReport = () => {
               ) : (
                 filteredData.map((hazard) => (
                   <tr key={hazard.hazard_id}>
-                    <td>{hazard.hazard_id}</td>
+                    
                     <td>{hazard.hazard_type}</td>
                     <td>
                       {hazard.hazard_loc_x}, {hazard.hazard_loc_y}
