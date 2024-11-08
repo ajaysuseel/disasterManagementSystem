@@ -4,6 +4,7 @@
 }
 
 .alert-management-toggle-container {
+    margin-top:60px;
     display: flex;
     align-items: center; /* Center align items */
 }
@@ -28,4 +29,5 @@
     border-radius: 4px; /* Rounded corners */
     font-size: 16px; /* Font size */
 }
+
 

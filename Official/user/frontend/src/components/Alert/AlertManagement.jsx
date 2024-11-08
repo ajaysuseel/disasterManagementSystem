@@ -13,6 +13,7 @@ const AlertManagement = () => {
   };
 
   return (
+    
     <div className="alert-management-wrapper">
       <Navbar/>
       <div className="alert-management-toggle-container">

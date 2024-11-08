@@ -10,9 +10,10 @@ const ResidentHomePage = () => {
   const [alerts, setAlerts] = useState(() => {
     // Initialize alerts from localStorage on first load
     const savedAlerts = localStorage.getItem('alerts');
+    console.log('Loaded alerts from localStorage:', savedAlerts); // Debug log
     return savedAlerts ? JSON.parse(savedAlerts) : [];
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Start with loading state as true
   const [errorMessage, setErrorMessage] = useState('');
 
   // Effect to handle user authentication and alert fetching interval
@@ -20,16 +21,25 @@ const ResidentHomePage = () => {
     if (!email) {
       navigate('/home'); // Redirect if email is not available
     } else {
-      fetchWardAndAlerts(); // Fetch ward and initial alerts
-      const intervalId = setInterval(fetchAlerts, 30000); // Fetch alerts every 30 seconds
+      // Fetch alerts when component mounts or email changes
+      fetchWardAndAlerts();
+
+      // Set interval for fetching new alerts every 30 seconds
+      const intervalId = setInterval(() => {
+        if (email) {
+          fetchWardAndAlerts(); // Fetch alerts every 30 seconds
+        }
+      }, 30000); // Fetch alerts every 30 seconds
+
       return () => clearInterval(intervalId); // Clear interval on unmount
     }
   }, [email, navigate]);
 
   // Function to fetch the ward and alerts for the user
   const fetchWardAndAlerts = async () => {
-    setLoading(true);
-    setErrorMessage('');
+    setLoading(true); // Start loading when fetch begins
+    setErrorMessage(''); // Clear previous error message
+
     try {
       const response = await fetch(`http://localhost:5000/api/ward?email=${email}`);
       const userData = await response.json();
@@ -43,8 +53,7 @@ const ResidentHomePage = () => {
     } catch (error) {
       console.error('Error fetching ward:', error);
       setErrorMessage(error.message);
-    } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading on error
     }
   };
 
@@ -52,8 +61,8 @@ const ResidentHomePage = () => {
   const fetchAlerts = async (ward) => {
     if (!ward) return;
 
-    setLoading(true);
-    setErrorMessage('');
+    setLoading(true); // Start loading when fetching alerts
+
     try {
       const alertResponse = await fetch(`http://localhost:5000/api/ralerts?ward=${ward}`);
       const data = await alertResponse.json();
@@ -62,13 +71,20 @@ const ResidentHomePage = () => {
         throw new Error(data.message || 'Failed to fetch alerts.');
       }
 
-      setAlerts(data);
-      localStorage.setItem('alerts', JSON.stringify(data)); // Store alerts in localStorage
+      console.log('Fetched alerts:', data); // Debug log to check fetched alerts
+
+      // Filter out any duplicate alerts by checking alert_id
+      const uniqueAlerts = [
+        ...new Map(data.map(alert => [alert.alert_id, alert])).values()
+      ];
+
+      setAlerts(uniqueAlerts); // Set fetched alerts to state
+      localStorage.setItem('alerts', JSON.stringify(uniqueAlerts)); // Persist alerts to localStorage
     } catch (error) {
       console.error('Error fetching alerts:', error);
       setErrorMessage(error.message);
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading after fetch completes
     }
   };
 
@@ -77,8 +93,8 @@ const ResidentHomePage = () => {
   const handleLogout = () => {
     localStorage.removeItem('username');
     localStorage.removeItem('alerts'); // Clear alerts from localStorage on logout
-    setEmail('');
-    navigate('/');
+    setEmail(''); // Reset the email in context
+    navigate('/'); // Navigate to the homepage
   };
 
   return (
@@ -98,7 +114,7 @@ const ResidentHomePage = () => {
                 ✖
               </button>
               <div className="resident-menu-buttons">
-                <button type="button" onClick={() => navigate('/emergency-help')}>Emergency Help</button>
+                
                 <button className="resident-logout-button" onClick={handleLogout}>Logout</button>
               </div>
             </div>
@@ -110,9 +126,9 @@ const ResidentHomePage = () => {
         <h1>Welcome, {name || 'Resident'}!</h1>
 
         {loading ? (
-          <p>Loading alerts...</p>
+          <p>Loading alerts...</p> // Display loading message when loading is true
         ) : errorMessage ? (
-          <p className="error-message">{errorMessage}</p>
+          <p className="error-message">{errorMessage}</p> // Display error message if any
         ) : (
           <div className="alerts-container">
             {alerts.length > 0 ? (
@@ -122,7 +138,7 @@ const ResidentHomePage = () => {
                 </div>
               ))
             ) : (
-              <p>No active alerts in your ward.</p>
+              <p>No active alerts in your ward.</p> // Display message if no active alerts
             )}
           </div>
         )}

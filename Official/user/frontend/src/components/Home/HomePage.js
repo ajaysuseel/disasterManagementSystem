@@ -1,8 +1,8 @@
-// src/components/HomePage.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../UserContext'; // Import the useUser hook
 import Alerts from './Alerts';
+import homeImage from '../../assets/home.jpeg'; // Import the image here
 import './homepage.css';
 
 const HomePage = () => {
@@ -61,6 +61,8 @@ const HomePage = () => {
 
       <div className="main-content">
         <h1>Welcome to the Disaster Management System</h1>
+        {/* Add Image */}
+        <img src={homeImage} alt="Disaster Management" className="homepage-image" />
       </div>
     </div>
   );

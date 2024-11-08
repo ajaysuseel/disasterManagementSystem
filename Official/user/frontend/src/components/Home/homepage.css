@@ -163,6 +163,10 @@
   font-size: 1rem; /* Adjust as needed */
 }
 
+.homepage-image{
+    height:92%;
+    width:100%;
+}
 /* Responsive Design */
 @media (max-width: 600px) {
   .sidebar-container {
